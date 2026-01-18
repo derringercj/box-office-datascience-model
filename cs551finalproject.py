@@ -369,6 +369,8 @@ def compute_results(director, writers, prod_companies, cast, budget, genres, run
     sample = sample[feature_columns]
 
     estimate = rf_w_youtube.predict(sample)[0]
+
+    opening_weekend = round(estimate * 0.30, -3)
   # Otherwise run the sample prediction on our no youtube model
   else:
     sample = pd.DataFrame([sample_data])
@@ -382,7 +384,7 @@ def compute_results(director, writers, prod_companies, cast, budget, genres, run
 
     opening_weekend = round(estimate * 0.30, -3)
 
-  return f"{round(estimate, -3)} ({opening_weekend} opening weekend)"
+  return f"{round(estimate, -3):,} ({opening_weekend:,} opening weekend)"
 
 # User Interface Implementation
 import gradio as gr
@@ -413,4 +415,4 @@ with gr.Blocks() as demo:
 
   generate.click(compute_results, inputs=[director, writers, prod_company, cast, budget, genres, runtime, dop_exp, release_date, checkboxes, composer, views, likes], outputs=estimate)
 
-demo.launch()
+demo.launch(share=True)
